@@ -4,4 +4,5 @@ module.exports = {
   remoteLogs: 'yellow', // enable remoteLogs and use the color yellow
   injectCss: false, // disable injecting css
   navigate: true, // enable auto-navigation
+  php: '/usr/sbin/php',
 };
