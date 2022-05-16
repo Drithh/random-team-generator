@@ -1,34 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Random Team</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;400&family=PT+Sans&family=Source+Sans+Pro&display=swap');
-    </style>
-      <script src="script.js"></script>
-  </head>
-  <body
-    class="flex flex-col place-content-center place-items-center min-w-[768px]"
-  >
+<?php
 
-    <header class="mt-20 flex place-content-center place-items-center flex-col">
-      <div class="font-PT font-medium text-6xl text-primary mb-4 text-center">
-        Team Generator
-      </div>
-      <div
-        class="text-primary font-Josefin font-medium tracking-wider text-xl text-center"
-      >
-        Buat Kelompok Secara Acak dan Adil!
-      </div>
-    </header>
-    <main class="flex flex-col mt-32 lg:w-[90%] w-full max-w-4xl">
-        <?php if(isset($_POST['submit'])) { ?>
-            <?php print_r($_POST); ?> 
+$people = $_POST['person'];
+$team = $_POST['team'];
+shuffle($people);
+for ($i = 0; $i < $team; $i++) {
+  $teams[] = 'Team' . ($i + 1);
+}
+
+$team_id = 0;
+
+for ($i = 0; $i < count($people); $i++) {
+  $team_members[$teams[$team_id]][] = $people[$i];
+  $team_id++;
+  if ($team_id == count($teams)) {
+    $team_id = 0;
+    shuffle($teams);
+  }
+}
+?>
+
+<div class="py-6 border-secondary border-y border-opacity-50">
+  <div class="font-PT font-medium text-3xl text-primary mb-14 text-center">
+    Pembagian Tim
+  </div>
+  <div class=" grid grid-cols-2 gap-14 px-14">
+    <?php foreach ($team_members as $team_member_name => $team_member) { ?>
+      <div class="team w-full">
+        <div class="team-name text-center font-bold font-lg font-Source border-y-secondary border-y border-opacity-50 py-3 text-primary">
+          <?php echo $team_member_name; ?>
+        </div>
+        <?php foreach ($team_member as $member) { ?>
+          <div class="team-member font-Source border-b-secondary border-b border-opacity-50 py-2 text-primary text-center overflow-hidden whitespace-nowrap text-ellipsis">
+            <?php echo ucfirst(strtolower($member)); ?>
+          </div>
         <?php } ?>
-    </main>
-  </body>
-</html>
+      </div>
+    <?php } ?>
+  </div>
+  <div class="font-PT font-medium text-xl text-primary  mt-16 text-center">
+      Waktu Pembuatan
+    </div>
+  <div class="text-primary font-Josefin font-medium tracking-wider text-base text-center">
+    <?= date('l jS \of F Y h:i:s') ?>
+    
+  </div>
+</div>

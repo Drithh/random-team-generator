@@ -34,7 +34,7 @@ const setRow = (rowData) => {
         class="item-table flex h-16  px-4 place-items-center border-b-secondary border-b-[1px] border-opacity-50 animate-height-enter gap-x-[5%]"
       >
         <div
-          class="font-Source text-base text-primary opacity-80 text-center w-[85%]"
+          class="name font-Source text-base text-primary opacity-80 text-center w-[85%]"
         >
           ${rowData.nama}
         </div>
@@ -63,8 +63,40 @@ const deleteRow = async (row) => {
 
 const createTeam = () => {
   const team = prompt('Jumlah Tim');
-  if (isNaN(team)) {
+  if (isNaN(team) || !team) {
     alert('Tolong Masukkan Angka');
     return;
   }
+
+  const form = document.querySelector('form');
+
+  form.innerHTML = form.querySelector('button').outerHTML;
+
+  const rows = [...document.querySelectorAll('.item-table')];
+
+  if (rows.length < team) {
+    alert('Tidak Cukup Data, Tambahkan Nama Lebih Banyak');
+    return;
+  }
+
+  const names = rows.map((row) => row.querySelector('.name').innerHTML.trim());
+  const inputNames = names.map(
+    (name) => `<input type="text" name="person[]" hidden value="${name}">`
+  );
+  if (!inputNames.length) {
+    alert('Tolong Masukkan Nama');
+    return;
+  }
+  form.innerHTML += inputNames.join(' ');
+
+  const teamInput = `<input type="text" name="team" hidden value=${team}>`;
+  form.innerHTML += teamInput;
+
+  const url = 'team.php';
+  fetch(url, {
+    method: 'POST',
+    body: new FormData(document.querySelector('#form')),
+  })
+    .then((response) => response.text())
+    .then((html) => (document.querySelector('#team').innerHTML = html));
 };
